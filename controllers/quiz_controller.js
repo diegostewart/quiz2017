@@ -4,7 +4,11 @@ var cloudinary = require('cloudinary');
 var fs = require('fs');
 var attHelper = require("../helpers/attachments");
 
+var express = require('express');
+var router = express.Router();
+
 var paginate = require('../helpers/paginate').paginate;
+var score = 0;
 
 // Opciones para los ficheros subidos a Cloudinary
 var cloudinary_upload_options = {
@@ -375,9 +379,50 @@ exports.play = function (req, res, next) {
     res.render('quizzes/play', {
         quiz: req.quiz,
         answer: answer,
+	score:score,
         cloudinary: cloudinary
     });
 };
+
+// GET /quizzes/randomplay
+exports.randomplay = function (req, res, next) {
+
+    var answer = req.query.answer || "";
+    models.Quiz.count().then(function(quizzes) {
+        var rand = Math.floor((Math.random() * quizzes) + 1);
+        var show = 0;
+        if (count > 0) {
+        while (questionsMade.indexOf(rand) === -1) {
+            rand = Math.floor((Math.random() * totalLen) + 1);
+        }
+         show = questionsMade[questionsMade.indexOf(rand)];
+         questionsMade[questionsMade.indexOf(rand)] = 0;
+         count--;
+         return models.Quiz.findById(show);
+        } else {   
+         res.render('quizzes/random_nomore', {
+               score: score
+            });
+        }
+    }).then(function(quiz) {
+        if (quiz) {
+            res.render('quizzes/random_play', {
+               quiz: quiz,
+               answer: answer,
+               score: score
+            });
+        } else {
+            throw new Error('No existe ningún quiz con id=' + quizId);
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });
+   
+    //req.quiz = quiz;
+};
+
+
+
 
 
 // GET /quizzes/:quizId/check
@@ -391,5 +436,40 @@ exports.check = function (req, res, next) {
         quiz: req.quiz,
         result: result,
         answer: answer
+    });
+};
+
+var score = 0;
+var count = 0;
+var totalLen = 0;
+var questionsMade = [0];
+ models.Quiz.count().then(function(quizzes) {
+        for (var i = 0; i < quizzes; i++) {
+            questionsMade.push(i + 1);
+        }
+     count = quizzes;
+     totalLen = quizzes;
+    }).catch(function(err) {
+        console.log(err);
+    });
+
+// GET /quizzes/:quizId/randomcheck
+exports.randomcheck = function (req, res, next) {
+
+    var answer = req.query.answer || "";
+
+    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+   
+    if (result) {
+        score++;
+    } else {
+        score = 0;
+    }
+
+    res.render('quizzes/random_result', {
+        quiz: req.quiz,
+        result: result,
+        answer: answer,
+        score: score
     });
 };

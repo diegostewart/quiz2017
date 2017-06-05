@@ -49,10 +49,15 @@ router.get('/', function (req, res, next) {
 router.get('/author', function (req, res, next) {
     res.render('author');
 });
-
+// Pagina de auda
 router.get('/help', function(req, res, next) {
     res.render('help');
 }); 
+
+
+
+
+
 
 
 
@@ -99,6 +104,10 @@ router.get('/users/:userId(\\d+)/quizzes', quizController.index);     // ver las
 
 
 
+
+
+
+
 // Definición de rutas de /quizzes
 router.get('/quizzes.:format?',
     quizController.index);
@@ -127,6 +136,10 @@ router.delete('/quizzes/:quizId(\\d+)',
 
 router.get('/quizzes/:quizId(\\d+)/play',
     quizController.play);
+router.get('/quizzes/randomplay',
+  quizController.randomplay);
+router.get('/quizzes/randomcheck/:quizId(\\d+)?',
+ quizController.randomcheck);
 router.get('/quizzes/:quizId(\\d+)/check',
     quizController.check);
 
