@@ -463,6 +463,7 @@ var questionsMade = [0];
 exports.randomcheck = function (req, res, next) {
 
     if(!req.session.score) req.session.score=0;
+    if(!req.session.questions)req.session.questions=[-1];
     var score = req.session.score;
     req.session.questions.push(req.quiz.id);
 
