@@ -445,6 +445,7 @@ exports.randomplay = function (req, res, next) {
                 req.session.score=0;
                 req.session.questions=[-1];
                 res.render('quizzes/random_nomore',{
+
                     score: req.session.score
                 });
 
