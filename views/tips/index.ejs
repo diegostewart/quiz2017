@@ -26,17 +26,13 @@
                       </a>
 
                 <% } %>
-		
-		 <div> 
-		 	<span id = "autor">  
-				 <small>
-					by  <%= quiz.tip.Author ? quiz.tip.Author.username : 							"Anónimo" %> 
-				 </small>
-			</span>			
-		 </div>
+         
+             <div>
+                <span id="autor"><small> by <%= tip.Author ? tip.Author.username : "Anómino" %> </small> </span>
+            </div>
 
-		 
-             </li>
+
+        </li>
          <% } %>
 
     <% } %>
