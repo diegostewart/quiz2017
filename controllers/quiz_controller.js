@@ -23,8 +23,8 @@ exports.load = function (req, res, next, quizId) {
 
     var options = {
         include: [
-            models.Tip,
-            models.Attachment,
+            {model: models.Tip, include: [{model: models.User, as: 'Author'}]},
+            {model: models.Attachment},
             {model: models.User, as: 'Author'}
         ]
     };
